@@ -16,4 +16,10 @@ public class StudentDto {
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^[0-9]{10}$", message = "Mobile must be 10 digits")
     public String mobile;
+
+    public StudentDto(String name, String email, String mobile) {
+        this.name = name;
+        this.email = email;
+        this.mobile = mobile;
+    }
 }
