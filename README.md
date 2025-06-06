@@ -1,18 +1,18 @@
-# 🎓 Student Management API (Quarkus + Redis)
+# Student Management API (Quarkus + Redis)
 
 A RESTful Student Management application built using [Quarkus](https://quarkus.io/) with integrated **Redis caching**, *
 *H2 in-memory database** (for testing), and layered architecture.
 
 ---
 
-## 🚀 Features
+## Features
 
-- ✅ Create, update, delete, and fetch students via RESTful endpoints
-- 🚀 Pagination support for fetching student lists
-- ⚡ Redis caching for paginated student results
-- 🧪 Integration-tested with Quarkus Test and RestAssured
-- 🧩 Layered architecture (Resource → Service → Repository)
-- 🗄️ H2 in-memory database for development and testing
+- Create, update, delete, and fetch students via RESTful endpoints
+- Pagination support for fetching student lists
+- Redis caching for paginated student results
+- Integration-tested with Quarkus Test and RestAssured
+- Layered architecture (Resource → Service → Repository)
+- ️ H2 in-memory database for development and testing
 
 ---
 
@@ -100,12 +100,6 @@ Then visit: [http://localhost:8001](http://localhost:8001)
 - Redis cache population
 - Redis cache invalidation
 - REST API integration with `RestAssured`
-
----
-
-## 👨‍💻 Author
-
-**Hemanth Kumar M**
 
 ---
 
