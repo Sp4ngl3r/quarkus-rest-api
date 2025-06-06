@@ -1,12 +1,11 @@
 package dev.spangler.student;
 
+import dev.spangler.cache.RedisService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import jakarta.inject.Inject;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 
 import static io.restassured.RestAssured.given;
 
@@ -16,23 +15,25 @@ class StudentTest {
 
     private static Long studentId;
 
+    @Inject
+    RedisService redisService;
+
     @Test
     @Order(1)
     void testCreateStudent() {
         StudentDto student = new StudentDto("Test User", "testuser@email.com", "9876543210");
 
-        Number id =
-                given()
-                        .contentType(ContentType.JSON)
-                        .body(student)
-                        .when()
-                        .post("/api/v1/students")
-                        .then()
-                        .statusCode(201)
-                        .body("name", Matchers.equalTo("Test User"))
-                        .body("email", Matchers.equalTo("testuser@email.com"))
-                        .body("mobile", Matchers.equalTo("9876543210"))
-                        .extract().path("id");
+        Number id = given()
+                .contentType(ContentType.JSON)
+                .body(student)
+                .when()
+                .post("/api/v1/students")
+                .then()
+                .statusCode(201)
+                .body("name", Matchers.equalTo("Test User"))
+                .body("email", Matchers.equalTo("testuser@email.com"))
+                .body("mobile", Matchers.equalTo("9876543210"))
+                .extract().path("id");
 
         studentId = id.longValue();
     }
@@ -54,11 +55,17 @@ class StudentTest {
     void testGetAllStudents() {
         given()
                 .when()
-                .get("/api/v1/students")
+                .get("/api/v1/students?page=0&size=10")
                 .then()
                 .statusCode(200)
                 .body("size()", Matchers.greaterThanOrEqualTo(1));
+
+        // Check if cache exists
+        String key = "students:page:0:size:10";
+        String cached = redisService.getValue(key);
+        Assertions.assertNotNull(cached, "Expected cache to be populated after GET");
     }
+
 
     @Test
     @Order(4)

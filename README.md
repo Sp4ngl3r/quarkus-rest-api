@@ -1,78 +1,114 @@
-# quarkus-rest-api
+# 🎓 Student Management API (Quarkus + Redis)
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+A RESTful Student Management application built using [Quarkus](https://quarkus.io/) with integrated **Redis caching**, *
+*H2 in-memory database** (for testing), and layered architecture.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+---
 
-## Running the application in dev mode
+## 🚀 Features
 
-You can run your application in dev mode that enables live coding using:
+- ✅ Create, update, delete, and fetch students via RESTful endpoints
+- 🚀 Pagination support for fetching student lists
+- ⚡ Redis caching for paginated student results
+- 🧪 Integration-tested with Quarkus Test and RestAssured
+- 🧩 Layered architecture (Resource → Service → Repository)
+- 🗄️ H2 in-memory database for development and testing
 
-```shell script
+---
+
+## 🏗️ Tech Stack
+
+| Layer      | Tech                              |
+|------------|-----------------------------------|
+| Backend    | Java + Quarkus (RESTEasy)         |
+| Database   | PostgreSQL, H2 (in-memory)        |
+| Cache      | Redis                             |
+| Testing    | JUnit 5, RestAssured, QuarkusTest |
+| Build Tool | Maven                             |
+
+---
+
+## 🔧 Getting Started
+
+### ✅ Prerequisites
+
+- Java 17+
+- Maven
+- Docker (for Redis)
+- RedisInsight (optional, for visualization)
+
+### ▶️ Running Redis Locally
+
+```bash
+docker run --name redis -p 6379:6379 -d redis
+```
+
+### ▶️ Start the Application
+
+```bash
 ./mvnw quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+App will be available at: [http://localhost:8080](http://localhost:8080)
 
-## Packaging and running the application
+---
 
-The application can be packaged using:
+## 📬 API Endpoints
 
-```shell script
-./mvnw package
+| Method | Endpoint                | Description                   |
+|--------|-------------------------|-------------------------------|
+| GET    | `/api/v1/students`      | List all students (paginated) |
+| GET    | `/api/v1/students/{id}` | Get student by ID             |
+| POST   | `/api/v1/students`      | Create a student              |
+| PUT    | `/api/v1/students/{id}` | Update a student              |
+| DELETE | `/api/v1/students/{id}` | Delete a student              |
+
+### 🔍 Pagination Example
+
+```http
+GET /api/v1/students?page=0&size=10
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+---
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+## 💾 Redis Caching
 
-If you want to build an _über-jar_, execute the following command:
+- Paginated results are cached using keys like:  
+  `students:page:0:size:10`
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+- On **create/update/delete**, the related cache is invalidated to avoid stale data.
+
+### Visualizing Redis
+
+```bash
+docker run -d -p 8001:8001 --name redis-insight redis/redisinsight
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+Then visit: [http://localhost:8001](http://localhost:8001)
 
-## Creating a native executable
+---
 
-You can create a native executable using:
+## 🧪 Running Tests
 
-```shell script
-./mvnw package -Dnative
+```bash
+./mvnw test
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+### ✅ Test Coverage Includes:
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+- CRUD operations
+- Redis cache population
+- Redis cache invalidation
+- REST API integration with `RestAssured`
 
-You can then execute your native executable with: `./target/quarkus-rest-api-1.0.0-SNAPSHOT-runner`
+---
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+## 👨‍💻 Author
 
-## Related Guides
+**Hemanth Kumar M**
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
+---
 
-## Provided Code
+## 📄 License
 
-### Hibernate ORM
-
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
-
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+This project is licensed under the MIT License.

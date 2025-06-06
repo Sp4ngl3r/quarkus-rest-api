@@ -28,15 +28,21 @@ public class StudentResource {
     StudentMapper studentMapper;
 
     @GET
-    public List<StudentResponseDto> getAllStudents(@Context UriInfo uriInfo) {
-        return studentRepository.listAll().stream()
+    public List<StudentResponseDto> fetchAllStudents(
+            @Context UriInfo uriInfo,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("10") int size
+    ) {
+        return studentService.fetchAllStudents(page, size)
+                .stream()
                 .map(student -> studentMapper.toResponseDto(student, uriInfo))
                 .collect(Collectors.toList());
     }
 
+
     @GET
     @Path("/{id}")
-    public Response getStudentById(@PathParam("id") Long id, @Context UriInfo uriInfo) {
+    public Response findStudentById(@PathParam("id") Long id, @Context UriInfo uriInfo) {
         Student student = studentService.findStudentById(id);
         StudentResponseDto studentResponse = studentMapper.toResponseDto(student, uriInfo);
 
